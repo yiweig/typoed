@@ -22,9 +22,14 @@ new_words = []
 for token in tokens:
     letters = list(token)
     length = len(letters)
+
     selected_index = random.randint(0, length - 1)
     selected_letter = letters[selected_index]
-    new_letter = random.choice(KEY_MAPPING[selected_letter])
+
+    new_letter = random.choice(KEY_MAPPING[selected_letter.lower()])
+    if selected_letter.isupper():
+        new_letter = new_letter.upper()
+
     letters[selected_index] = new_letter
     word = ''.join(letters)
     new_words.append(word)
