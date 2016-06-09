@@ -1,6 +1,8 @@
 # typoed
 
-A simple tool to introduce typos into your text!
+A simple tool to introduce random typos into your text!
+
+Typos are determined using adjacent letters on the keyboard (currently based on the US iOS QWERTY layout).
 
 ## Examples
 
