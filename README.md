@@ -2,11 +2,11 @@
 
 A simple tool to introduce typos into your text!
 
-##### Examples
+## Examples
 
-Input: The quick brown fox jumps over the lazy dog
+**Input:** The quick brown fox jumps over the lazy dog
 
-Some outputs:
+**Some outputs:**
 
 Fhe auick bdown fpx humps pver thw pazy dig
 
