@@ -1,3 +1,4 @@
+import itertools
 import random
 import sys
 
@@ -17,32 +18,68 @@ def read_adjacency_list(filename):
     return mapping
 
 
-def typo(input_text):
+# finds a replacement letter based on the given key mapping
+def get_replacement(character, key_mapping):
+    possible_replacements = key_mapping[character.lower()]
+    new_letter = random.choice(possible_replacements)
+    if character.isupper():
+        new_letter = new_letter.upper()
+    return new_letter
+
+
+# pairwise function from itertools recipes page
+# https://docs.python.org/3/library/itertools.html#itertools-recipes
+def pairwise(iterable):
+    """s -> (s0,s1), (s1,s2), (s2, s3), ..."""
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return zip(a, b)
+
+
+# create typos using nltk's tokens
+# (slower but more flexibility for future augmentation)
+def typo_by_token(input_text, key_mapping):
     # read in input sentence and tokenize
     tokens = nltk.word_tokenize(input_text)
 
     # for each word randomly select a letter and then randomly replace it with its adjacent letter
     new_words = []
     for token in tokens:
-        letters = list(token)
-        length = len(letters)
+        characters = list(token)
+        length = len(characters)
 
         selected_index = random.randint(0, length - 1)
-        selected_letter = letters[selected_index]
+        selected_characters = characters[selected_index]
 
-        possible_replacements = KEY_MAPPING[selected_letter.lower()]
-        new_letter = random.choice(possible_replacements)
-        if selected_letter.isupper():
-            new_letter = new_letter.upper()
+        new_character = get_replacement(selected_characters, key_mapping)
 
-        letters[selected_index] = new_letter
-        word = ''.join(letters)
+        characters[selected_index] = new_character
+        word = ''.join(characters)
         new_words.append(word)
 
     new_text = ' '.join(new_words)
     return new_text
 
 
-KEY_MAPPING = read_adjacency_list(KEY_ADJACENCY_LIST_FILE_NAME)
+# create typos using delimiters in the text
+# (faster but less flexible)
+def typo_by_delimiter(input_text, key_mapping, delimiter=' '):
+    characters = list(input_text)
+    indices = [index for index, character in enumerate(characters) if character == delimiter]
+    indices.insert(0, 0)
+    indices.append(len(characters))
 
-print(typo(sys.argv[1]))
+    for begin, end in pairwise(indices):
+        selected_index = random.randint(begin + 1, end - 1)
+        selected_character = characters[selected_index]
+        new_character = get_replacement(selected_character, key_mapping)
+        characters[selected_index] = new_character
+
+    new_text = ''.join(characters)
+    return new_text
+
+
+KEY_MAPPING = read_adjacency_list(KEY_ADJACENCY_LIST_FILE_NAME)
+old_text = sys.argv[1]
+typoed_text = typo_by_delimiter(old_text, KEY_MAPPING)
+print(typoed_text)
