@@ -64,11 +64,15 @@ def typo_by_token(input_text, key_mapping):
 # create typos using delimiters in the text
 # (faster but less flexible)
 def typo_by_delimiter(input_text, key_mapping, delimiter=' '):
+    # break input into individual characters, and find indices of delimiters
     characters = list(input_text)
     indices = [index for index, character in enumerate(characters) if character == delimiter]
+    # since we want the indices in between the delimiters, add 0 and length-1
+    # to the beginning and end of the list, respectively
     indices.insert(0, 0)
     indices.append(len(characters))
 
+    # for each consecutive pair of indices, randomly select an index to replace
     for begin, end in pairwise(indices):
         selected_index = random.randint(begin + 1, end - 1)
         selected_character = characters[selected_index]
