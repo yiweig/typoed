@@ -30,7 +30,8 @@ def typo(input_text):
         selected_index = random.randint(0, length - 1)
         selected_letter = letters[selected_index]
 
-        new_letter = random.choice(KEY_MAPPING[selected_letter.lower()])
+        possible_replacements = KEY_MAPPING[selected_letter.lower()]
+        new_letter = random.choice(possible_replacements)
         if selected_letter.isupper():
             new_letter = new_letter.upper()
 
