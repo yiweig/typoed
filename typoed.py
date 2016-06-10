@@ -20,11 +20,14 @@ def read_adjacency_list(filename):
 
 # finds a replacement letter based on the given key mapping
 def get_replacement(character, key_mapping):
-    possible_replacements = key_mapping[character.lower()]
-    new_letter = random.choice(possible_replacements)
-    if character.isupper():
-        new_letter = new_letter.upper()
-    return new_letter
+    if character in key_mapping:
+        possible_replacements = key_mapping[character.lower()]
+        new_letter = random.choice(possible_replacements)
+        if character.isupper():
+            new_letter = new_letter.upper()
+        return new_letter
+    else:
+        return character
 
 
 # pairwise function from itertools recipes page
